@@ -12,6 +12,11 @@ sc.Inventory.inject({
 		for (var i = 0; i < this.items.length; i++)
 			if (this.items[i])
 				window.itemAPI.onItemRegister(i);
+	},
+	getItem: function (b) {
+		var c = window.itemAPI.customItemToId[b];
+		c && (b = c);
+		return b < 0 ? null : this.items[b];
 	}
 });
 
