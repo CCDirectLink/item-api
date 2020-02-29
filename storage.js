@@ -125,8 +125,8 @@ itemAPI.storageProcessors = {
 			}
 		} else if (shadow) {
 			for (var k in shadow) {
-				if (k in itemAPI.customItemToId) {
-					var id = itemAPI.customItemToId[k];
+				if (shadow[k] in itemAPI.customItemToId) {
+					var id = itemAPI.customItemToId[shadow[k]];
 					// This is the complicated bit...
 					if (victim[k] >= 0) {
 						// Conflict. Push the item into main inventory.
