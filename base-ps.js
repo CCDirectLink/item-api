@@ -73,7 +73,7 @@ sc.PlayerModel.inject({
 	getItemAmount: function(a) {
 		var b = window.itemAPI.customItemToId[a];
 		b && (a = b);
-        if (!(a < 0)) return this.items[a] || 0
+        	if (!(a < 0)) return this.items[a] || 0
 	},
 	getItemAmountWithEquip: function(a) {
 		var b = window.itemAPI.customItemToId[a];
