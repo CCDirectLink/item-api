@@ -48,6 +48,4 @@ Given that multiple mods may have added items to the item database in different 
 
 This is where `item-api` works its magic. Its key functionality is allowing custom items to have a `customItem` alias that is two-way mapped to the custom item's current ID. To use such a custom item in place of a normal item ID for specifying anything that adds an item, such as enemy item drops or trader offerings, simply use the item's `customItem` alias in place of the usual numeric item ID. If using custom items causes the game to break and crash, please file an issue to this repo, with sufficient details to replicate the bug with.
 
-With that in mind, happy modding, developers!
-
-- Bakafish
+With that in mind, happy modding, developers! - Bakafish
