@@ -15,8 +15,8 @@ Create a JSON patch file (with the `.json.patch` extension) in the `assets/data`
   "type": "ADD_ARRAY_ELEMENT",
   "content":
   {
-    "order": "this is a number that is used to sort your item in item lists",
-    "customItem": "a label used by item-api to find your custom item, regardless of when the item gets added to the database",
+    "order": "This is a number that is used to sort your item in item lists",
+    "customItem": "A string label used by item-api to find your custom item, regardless of when the item gets added to the database",
     "name": {
       "en_US": "Here's the English translation of your item's name",
       "langUid": 0
