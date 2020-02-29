@@ -19,9 +19,9 @@ sc.Inventory.inject({
 		return b < 0 ? null : this.items[b];
 	},
 	addItem: function(a, c, d, e) {
-		var f = window.itemAPI.customItemToId[b];
+		var f = window.itemAPI.customItemToId[a];
 		f && (a = f);
-        if (!(a < 0)) {
+        	if (!(a < 0)) {
 			this.items[a] = this.items[a] ? Math.min(this.items[a] + (c | 0), 99) : c | 0;
 			this._addNewItem(a);
 			sc.stats.addMap("items", "total", c);
