@@ -18,29 +18,13 @@ sc.Inventory.inject({
 		c && (b = c);
 		return b < 0 ? null : this.items[b];
 	},
-	addItem: function(a, c, d, e) {
-		var f = window.itemAPI.customItemToId[a];
-		f && (a = f);
-        	if (!(a < 0)) {
-			this.items[a] = this.items[a] ? Math.min(this.items[a] + (c | 0), 99) : c | 0;
-			this._addNewItem(a);
-			sc.stats.addMap("items", "total", c);
-			sc.stats.addMap("items", a, c);
-			b.id = a;
-			b.amount = c;
-			b.skip = d;
-			b.cutscene = e;
-			sc.Model.notifyObserver(this, sc.PLAYER_MSG.ITEM_OBTAINED,
-				b)
-		}
-    },
-    isBuffID: function(b) {
+	isBuffID: function(b) {
 		return this.getItem(b).isBuff
-    },
-    isEquipID: function(b) {
+	},
+	isEquipID: function(b) {
 		return this.getItem(b).type == sc.ITEMS_TYPES.EQUIP
-    },
-    getItemNameWithIcon: function(b) {
+	},
+	getItemNameWithIcon: function(b) {
 		b = this.getItem(b);
 		return !b ? "" : "\\i[" + (b.icon + this.getRaritySuffix(b.rarity || 0) || "item-default") + "]" + ig.LangLabel.getText(b.name)
 	},
@@ -77,11 +61,19 @@ sc.ItemContent.inject({
 	}
 });
 
+var b = {
+	id: 0,
+	equipID: 0,
+	amount: 0,
+	skip: false,
+	unequip: false
+};
+
 sc.PlayerModel.inject({
 	getItemAmount: function(a) {
 		var b = window.itemAPI.customItemToId[a];
 		b && (a = b);
-        	if (!(a < 0)) return this.items[a] || 0
+        if (!(a < 0)) return this.items[a] || 0
 	},
 	getItemAmountWithEquip: function(a) {
 		var b = window.itemAPI.customItemToId[a];
@@ -110,6 +102,55 @@ sc.PlayerModel.inject({
 				e >= 0 && e == a && b++
 			}
 			return b
+		}
+	},
+	addItem: function(a, c, d, e) {
+		var f = window.itemAPI.customItemToId[a];
+		f && (a = f);
+        if (!(a < 0)) {
+			this.items[a] = this.items[a] ? Math.min(this.items[a] + (c | 0), 99) : c | 0;
+			this._addNewItem(a);
+			sc.stats.addMap("items", "total", c);
+			sc.stats.addMap("items", a, c);
+			b.id = a;
+			b.amount = c;
+			b.skip = d;
+			b.cutscene = e;
+			sc.Model.notifyObserver(this, sc.PLAYER_MSG.ITEM_OBTAINED,
+				b)
+		}
+	},
+	removeItem: function(a, c, d, e) {
+		var f = window.itemAPI.customItemToId[a];
+		f && (a = f);
+		if (!(a < 0 || c <= 0)) {
+			if (e && this.items[a] < c && sc.inventory.getItem(a).type == sc.ITEMS_TYPES.EQUIP) {
+				if (c - this.items[a] >= 2) {
+					a == this.equip.leftArm && this.setEquipment(sc.MENU_EQUIP_BODYPART.RIGHT_ARM, -1E3);
+					a == this.equip.rightArm && this.setEquipment(sc.MENU_EQUIP_BODYPART.LEFT_ARM, -1E3)
+				} else a == this.equip.rightArm ? this.setEquipment(sc.MENU_EQUIP_BODYPART.RIGHT_ARM, -1E3)
+					: a == this.equip.leftArm && this.setEquipment(sc.MENU_EQUIP_BODYPART.LEFT_ARM, -1E3);
+				a == this.equip.head && this.setEquipment(sc.MENU_EQUIP_BODYPART.HEAD, -1E3);
+				a == this.equip.torso && this.setEquipment(sc.MENU_EQUIP_BODYPART.TORSO, -1E3);
+				a == this.equip.feet && this.setEquipment(sc.MENU_EQUIP_BODYPART.FEET, -1E3)
+			}
+			if (this.items[a]) {
+				c = Math.min(this.items[a], c);
+				this.items[a] = this.items[a] - c;
+				if (this.items[a] <= 0) {
+					this._removeIDFromNewList(a);
+					this.isFavorite(a) && this.updateFavorite(a);
+					if (this.itemToggles[a] && this.itemToggles[a].state) {
+						this.itemToggles[a].state = false;
+						sc.Model.notifyObserver(this, sc.PLAYER_MSG.ITEM_TOGGLED)
+					}
+				}
+				b.id = a;
+				b.amount = c;
+				d || sc.Model.notifyObserver(this, sc.PLAYER_MSG.ITEM_REMOVED, b);
+				return true
+			}
+			return false
 		}
 	}
 });
