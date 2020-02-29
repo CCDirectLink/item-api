@@ -80,13 +80,11 @@ sc.ItemContent.inject({
 sc.PlayerModel.inject({
 	getItemAmount: function(a) {
 		var b = window.itemAPI.customItemToId[a];
-		b && console.log(`${a} -> ${b}: ${this.items[b]}`);
 		b && (a = b);
-        if (!(a < 0)) return this.items[a] || 0
-    },
+        	if (!(a < 0)) return this.items[a] || 0
+	},
 	getItemAmountWithEquip: function(a) {
 		var b = window.itemAPI.customItemToId[a];
-		b && console.log(`(equip) ${a} -> ${b}: ${this.items[b]}`);
 		b && (a = b);
 		if (!(a < 0)) {
 			var b = this.items[a] || 0,
