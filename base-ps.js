@@ -115,3 +115,18 @@ sc.PlayerModel.inject({
 		this.parent(a, c, d, e);
 	}
 });
+
+sc.EnemyDrops.inject({
+	setDrops: function(b, d, f) {
+		if (b) {
+			for (var j = 0; j < 4; j++)
+				if (b[j]) {
+					if (!b[j].boosted || f) {
+						var newId = window.itemAPI.customItemToId[b[j].item];
+						newId && (b[j].item = newId);
+					}
+				}
+		}
+		this.parent(b, d, f);
+    }
+});
