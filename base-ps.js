@@ -130,3 +130,13 @@ sc.EnemyDrops.inject({
 		this.parent(b, d, f);
     }
 });
+
+sc.TradeModel.inject({
+    setEquipID: function(b, a) {
+    	var f = window.itemAPI.customItemToId[b];
+		f && (b = f);
+        this.equipID = b;
+        this.compareMode = sc.TRADE_COMPARE_MODE.EQUIP;
+        sc.Model.notifyObserver(this, sc.TRADE_MODEL_EVENT.EQUIP_ID_CHANGED, a)
+    }
+});
