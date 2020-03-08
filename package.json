@@ -2,7 +2,7 @@
 	"name": "item-api",
 	"description": "Allows custom items to be prepared in such a way that they 'just work'.",
 	"homepage": "https://gitlab.com/20kdc/ccprestartapi",
-	"version": "0.2.1",
+	"version": "0.3.0",
 	"ccmodDependencies": {
 		"templating-api": "^0.*"
 	},
