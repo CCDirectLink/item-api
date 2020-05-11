@@ -28,6 +28,9 @@ sc.Inventory.inject({
 		b = this.getItem(b);
 		return !b ? "" : "\\i[" + (b.icon + this.getRaritySuffix(b.rarity || 0) || "item-default") + "]" + ig.LangLabel.getText(b.name)
 	},
+	getItemLevel: function(b) {
+        return b < 0 ? 0 : this.getItem(b).level || 0
+    },
 	getItemIcon: function(b) {
 		b = this.getItem(b);
 		if (!b)
@@ -140,3 +143,32 @@ sc.TradeModel.inject({
         sc.Model.notifyObserver(this, sc.TRADE_MODEL_EVENT.EQUIP_ID_CHANGED, a)
     }
 });
+
+sc.PlayerLevelTools.updateEquipStats = function(a, b, c) {
+    for (var e in a) {
+    	var key;
+        if (a[e] >= 0 || ((key = window.itemAPI.customItemToId[a[e]]) && key >= 0)) {
+            var f = sc.inventory.getItem(a[e]),
+                g = f.params;
+            b.hp = b.hp + Math.floor(g.hp || 0);
+            b.attack = b.attack + Math.floor(g.attack || 0);
+            b.defense = b.defense + Math.floor(g.defense || 0);
+            b.focus = b.focus + Math.floor(g.focus ||
+                0);
+            if (g.elemFactor)
+                for (var h = 4; h--;) {
+                    var i = Math.round(b.elemFactor[h] * 100) + Math.round((g.elemFactor[h] || 1) * 100 - 100);
+                    b.elemFactor[h] = Math.min(sc.MAX_MOD_VAL, i) / 100
+                }
+            var f = f.properties,
+                j;
+            for (j in f)
+                if (sc.MODIFIERS[j])
+                    if (c[j]) {
+                        g = c[j];
+                        g = Math.round(g * 100) + Math.round(f[j] * 100 - 100);
+                        c[j] = Math.min(sc.MAX_MOD_VAL, g) / 100
+                    } else c[j] = f[j]
+        }
+    }
+}
