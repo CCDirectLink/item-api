@@ -6,6 +6,10 @@
  * You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
  */
 
+if (versions.hasOwnProperty('templating-api')) {
+	console.error('item-api now includes the code of templating-api to make the installation easier. Please, uninstall templating-api.');
+} else {
+
 // 0: Allow arbitrary resource reordering.
 ig.Loader.inject({
 	stagedLoaderRemainingStages: [],
@@ -107,3 +111,5 @@ ig.JsonTemplate.inject({
 		return this.parent.apply(this, arguments);
 	}
 });
+
+}
