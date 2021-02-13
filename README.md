@@ -1,6 +1,8 @@
 # item-api
 Original project by 20kdc. Recovered for general community usage
 
+**NOTE:** Since version 0.4.0 item-api includes the code of templating-api to make the installation easier, thus templating-api is no longer needed. So, please, uninstall templating-api after updating.
+
 ## Guide for Mod Developers
 So, you want to add custom items into CrossCode? Here's the steps to doing exactly that!
 
