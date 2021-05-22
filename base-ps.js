@@ -7,168 +7,178 @@
 
 // Load custom items.
 sc.Inventory.inject({
-	onload: function (a) {
-		this.parent(a);
-		for (var i = 0; i < this.items.length; i++)
-			if (this.items[i])
-				window.itemAPI.onItemRegister(i);
-	},
-	getItem: function (b) {
-		var c = window.itemAPI.customItemToId[b];
-		c && (b = c);
-		return b < 0 ? null : this.items[b];
-	},
-	isBuffID: function(b) {
-		return this.getItem(b).isBuff
-	},
-	isEquipID: function(b) {
-		return this.getItem(b).type == sc.ITEMS_TYPES.EQUIP
-	},
-	getItemNameWithIcon: function(b) {
-		b = this.getItem(b);
-		return !b ? "" : "\\i[" + (b.icon + this.getRaritySuffix(b.rarity || 0) || "item-default") + "]" + ig.LangLabel.getText(b.name)
-	},
-	getItemLevel: function(b) {
-        return b < 0 ? 0 : this.getItem(b).level || 0
-    },
-	getItemIcon: function(b) {
-		b = this.getItem(b);
-		if (!b)
-			return null;
-		return !b ? "item-default" : "\\i[" + (b.icon + this.getRaritySuffix(b.rarity || 0) || "item-default") + "]"
-	},
-	getItemDescription: function(b) {
-		b = this.getItem(b);
-		return b ? ig.LangLabel.getText(b.description) : ""
-	},
-	getItemRarity: function(b) {
-		b = this.getItem(b);
-		return !b ? null : b.rarity
-	},
-	getItemSubType: function(b) {
-		b = this.getItem(b);
-		return !b ? null : b.equipType
-	},
-	isConsumable: function(b) {
-		b = this.getItem(b);
-		return !b ? false : b.type == sc.ITEMS_TYPES.CONS
-	}
+  onload: function(a) {
+    this.parent(a);
+    for (var i = 0; i < this.items.length; i++)
+      if (this.items[i])
+        window.itemAPI.onItemRegister(i);
+  },
+  getItem: function(b) {
+    var c = window.itemAPI.customItemToId[b];
+    c && (b = c);
+    return b < 0 ? null : this.items[b];
+  },
+  isBuffID: function(b) {
+    return this.getItem(b).isBuff
+  },
+  isEquipID: function(b) {
+    return this.getItem(b).type == sc.ITEMS_TYPES.EQUIP
+  },
+  getItemNameWithIcon: function(b) {
+    b = this.getItem(b);
+    return !b ? "" : "\\i[" + (b.icon + this.getRaritySuffix(b.rarity || 0) || "item-default") + "]" + ig.LangLabel.getText(b.name)
+  },
+  getItemLevel: function(b) {
+    return b < 0 ? 0 : this.getItem(b).level || 0
+  },
+  getItemIcon: function(b) {
+    b = this.getItem(b);
+    if (!b)
+      return null;
+    return !b ? "item-default" : "\\i[" + (b.icon + this.getRaritySuffix(b.rarity || 0) || "item-default") + "]"
+  },
+  getItemDescription: function(b) {
+    b = this.getItem(b);
+    return b ? ig.LangLabel.getText(b.description) : ""
+  },
+  getItemRarity: function(b) {
+    b = this.getItem(b);
+    return !b ? null : b.rarity
+  },
+  getItemSubType: function(b) {
+    b = this.getItem(b);
+    return !b ? null : b.equipType
+  },
+  isConsumable: function(b) {
+    b = this.getItem(b);
+    return !b ? false : b.type == sc.ITEMS_TYPES.CONS
+  }
 });
 
 // Devs be violating abstraction barriers I swear to god.
 sc.ItemContent.inject({
-	init: function(b, a) {
-		var c = window.itemAPI.customItemToId[b];
-		c && (b = c);
-		this.parent(b, a);
-	}
+  init: function(b, a) {
+    var c = window.itemAPI.customItemToId[b];
+    c && (b = c);
+    this.parent(b, a);
+  }
 });
 
 var b = {
-	id: 0,
-	equipID: 0,
-	amount: 0,
-	skip: false,
-	unequip: false
+  id: 0,
+  equipID: 0,
+  amount: 0,
+  skip: false,
+  unequip: false
 };
 
 sc.PlayerModel.inject({
-	getItemAmount: function(a) {
-		var b = window.itemAPI.customItemToId[a];
-		b && (a = b);
-        	if (!(a < 0)) return this.items[a] || 0
-	},
-	getItemAmountWithEquip: function(a) {
-		var b = window.itemAPI.customItemToId[a];
-		b && (a = b);
-		if (!(a < 0)) {
-			var b = this.items[a] || 0,
-			c = sc.inventory.getItem(a);
-			if (c.type == sc.ITEMS_TYPES.EQUIP) {
-				var d = -1,
-				e = -1;
-				switch (c.equipType) {
-					case sc.ITEMS_EQUIP_TYPES.HEAD:
-						d = this.equip.head;
-						break;
-					case sc.ITEMS_EQUIP_TYPES.ARM:
-						d = this.equip.leftArm;
-						e = this.equip.rightArm;
-						break;
-					case sc.ITEMS_EQUIP_TYPES.TORSO:
-						d = this.equip.torso;
-						break;
-					case sc.ITEMS_EQUIP_TYPES.FEET:
-						d = this.equip.feet
-				}
-				d >= 0 && d == a && b++;
-				e >= 0 && e == a && b++
-			}
-			return b
-		}
-	},
-	addItem: function(a, c, d, e) {
-		var f = window.itemAPI.customItemToId[a];
-		f && (a = f);
-		this.parent(a, c, d, e);
-	},
-	removeItem: function(a, c, d, e) {
-		var f = window.itemAPI.customItemToId[a];
-		f && (a = f);
-		this.parent(a, c, d, e);
-	}
+  getItemAmount: function(a) {
+    var b = window.itemAPI.customItemToId[a];
+    b && (a = b);
+    if (!(a < 0)) return this.items[a] || 0
+  },
+  getItemAmountWithEquip: function(a) {
+    var b = window.itemAPI.customItemToId[a];
+    b && (a = b);
+    if (!(a < 0)) {
+      var b = this.items[a] || 0,
+        c = sc.inventory.getItem(a);
+      if (c.type == sc.ITEMS_TYPES.EQUIP) {
+        var d = -1,
+          e = -1;
+        switch (c.equipType) {
+          case sc.ITEMS_EQUIP_TYPES.HEAD:
+            d = this.equip.head;
+            break;
+          case sc.ITEMS_EQUIP_TYPES.ARM:
+            d = this.equip.leftArm;
+            e = this.equip.rightArm;
+            break;
+          case sc.ITEMS_EQUIP_TYPES.TORSO:
+            d = this.equip.torso;
+            break;
+          case sc.ITEMS_EQUIP_TYPES.FEET:
+            d = this.equip.feet
+        }
+        d >= 0 && d == a && b++;
+        e >= 0 && e == a && b++
+      }
+      return b
+    }
+  },
+  addItem: function(a, c, d, e) {
+    var f = window.itemAPI.customItemToId[a];
+    f && (a = f);
+    this.parent(a, c, d, e);
+  },
+  removeItem: function(a, c, d, e) {
+    var f = window.itemAPI.customItemToId[a];
+    f && (a = f);
+    this.parent(a, c, d, e);
+  },
+  onVarAccess: function(a, b) {
+    if (b[0] == "item") {
+      var c = b[1];
+      if (b[2] == "amount") return this.getItemAmount(c) || 0;
+      if (b[2] == "name") return sc.inventory.getItemName(c);
+      if (b[2] == "toggled") return this.getToggleItemState(c);
+      if (b[2] == "amountEquipped") return this.getItemAmountWithEquip(c)
+    }
+    return this.parent(a, b);
+  }
 });
 
 sc.EnemyDrops.inject({
-	setDrops: function(b, d, f) {
-		if (b) {
-			for (var j = 0; j < 4; j++)
-				if (b[j]) {
-					if (!b[j].boosted || f) {
-						var newId = window.itemAPI.customItemToId[b[j].item];
-						newId && (b[j].item = newId);
-					}
-				}
-		}
-		this.parent(b, d, f);
+  setDrops: function(b, d, f) {
+    if (b) {
+      for (var j = 0; j < 4; j++)
+        if (b[j]) {
+          if (!b[j].boosted || f) {
+            var newId = window.itemAPI.customItemToId[b[j].item];
+            newId && (b[j].item = newId);
+          }
+        }
     }
+    this.parent(b, d, f);
+  }
 });
 
 sc.TradeModel.inject({
-    setEquipID: function(b, a) {
-    	var f = window.itemAPI.customItemToId[b];
-		f && (b = f);
-        this.equipID = b;
-        this.compareMode = sc.TRADE_COMPARE_MODE.EQUIP;
-        sc.Model.notifyObserver(this, sc.TRADE_MODEL_EVENT.EQUIP_ID_CHANGED, a)
-    }
+  setEquipID: function(b, a) {
+    var f = window.itemAPI.customItemToId[b];
+    f && (b = f);
+    this.equipID = b;
+    this.compareMode = sc.TRADE_COMPARE_MODE.EQUIP;
+    sc.Model.notifyObserver(this, sc.TRADE_MODEL_EVENT.EQUIP_ID_CHANGED, a)
+  }
 });
 
 sc.PlayerLevelTools.updateEquipStats = function(a, b, c) {
-    for (var e in a) {
-    	var key;
-        if (a[e] >= 0 || ((key = window.itemAPI.customItemToId[a[e]]) && key >= 0)) {
-            var f = sc.inventory.getItem(a[e]),
-                g = f.params;
-            b.hp = b.hp + Math.floor(g.hp || 0);
-            b.attack = b.attack + Math.floor(g.attack || 0);
-            b.defense = b.defense + Math.floor(g.defense || 0);
-            b.focus = b.focus + Math.floor(g.focus ||
-                0);
-            if (g.elemFactor)
-                for (var h = 4; h--;) {
-                    var i = Math.round(b.elemFactor[h] * 100) + Math.round((g.elemFactor[h] || 1) * 100 - 100);
-                    b.elemFactor[h] = Math.min(sc.MAX_MOD_VAL, i) / 100
-                }
-            var f = f.properties,
-                j;
-            for (j in f)
-                if (sc.MODIFIERS[j])
-                    if (c[j]) {
-                        g = c[j];
-                        g = Math.round(g * 100) + Math.round(f[j] * 100 - 100);
-                        c[j] = Math.min(sc.MAX_MOD_VAL, g) / 100
-                    } else c[j] = f[j]
+  for (var e in a) {
+    var key;
+    if (a[e] >= 0 || ((key = window.itemAPI.customItemToId[a[e]]) && key >= 0)) {
+      var f = sc.inventory.getItem(a[e]),
+        g = f.params;
+      b.hp = b.hp + Math.floor(g.hp || 0);
+      b.attack = b.attack + Math.floor(g.attack || 0);
+      b.defense = b.defense + Math.floor(g.defense || 0);
+      b.focus = b.focus + Math.floor(g.focus ||
+        0);
+      if (g.elemFactor)
+        for (var h = 4; h--;) {
+          var i = Math.round(b.elemFactor[h] * 100) + Math.round((g.elemFactor[h] || 1) * 100 - 100);
+          b.elemFactor[h] = Math.min(sc.MAX_MOD_VAL, i) / 100
         }
+      var f = f.properties,
+        j;
+      for (j in f)
+        if (sc.MODIFIERS[j])
+          if (c[j]) {
+            g = c[j];
+            g = Math.round(g * 100) + Math.round(f[j] * 100 - 100);
+            c[j] = Math.min(sc.MAX_MOD_VAL, g) / 100
+          } else c[j] = f[j]
     }
+  }
 }
