@@ -113,5 +113,14 @@ sc.PlayerModel.inject({
 		var f = window.itemAPI.customItemToId[a];
 		f && (a = f);
 		this.parent(a, c, d, e);
-	}
+	},
+
+	hasAnySetItem(set) {
+		const items = set.items;
+		for (const item of items) {
+		  if (this.hasItem(item)) 
+			return true;
+		}
+		return false;
+	},
 });
