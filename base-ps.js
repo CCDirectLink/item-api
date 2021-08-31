@@ -73,7 +73,7 @@ sc.PlayerModel.inject({
 	getItemAmount: function(a) {
 		var b = window.itemAPI.customItemToId[a];
 		b && (a = b);
-        	if (!(a < 0)) return this.items[a] || 0
+		if (!(a < 0)) return this.items[a] || 0
 	},
 	getItemAmountWithEquip: function(a) {
 		var b = window.itemAPI.customItemToId[a];
@@ -113,5 +113,13 @@ sc.PlayerModel.inject({
 		var f = window.itemAPI.customItemToId[a];
 		f && (a = f);
 		this.parent(a, c, d, e);
-	}
+	},
+
+	hasAnySetItem(set) {
+		for (const item of set.items) {
+			if (this.hasItem(item))
+				return true;
+		}
+		return false;
+	},
 });
