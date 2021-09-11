@@ -123,3 +123,10 @@ sc.PlayerModel.inject({
 		return false;
 	},
 });
+
+sc.StatsModel.inject({
+    getMap: function(b, a) {
+        if(b == "items") {a = window.itemAPI.customItemToId[a] || a}
+        return this.parent(b, a)
+    }
+});
