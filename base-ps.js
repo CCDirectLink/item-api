@@ -49,7 +49,11 @@ sc.Inventory.inject({
 	isConsumable: function(b) {
 		b = this.getItem(b);
 		return !b ? false : b.type == sc.ITEMS_TYPES.CONS
-	}
+	},
+	getBuffString(b,a,d){
+        var c = window.itemAPI.customItemToId[b] || b;
+        return this.parent(c,a,d)
+    }
 });
 
 // Devs be violating abstraction barriers I swear to god.
@@ -128,5 +132,12 @@ sc.StatsModel.inject({
     getMap: function(b, a) {
         if(b == "items") {a = window.itemAPI.customItemToId[a] || a}
         return this.parent(b, a)
+    }
+});
+
+sc.MenuModel.inject({
+    setBuffText(a,b,e){
+		// needed for showing the buff info in the help menu
+        this.parent(a, b, window.itemAPI.customItemToId[e] || e)
     }
 });
