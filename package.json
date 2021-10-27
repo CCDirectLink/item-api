@@ -2,7 +2,7 @@
 	"name": "item-api",
 	"description": "Allows custom items to be prepared in such a way that they 'just work'.",
 	"homepage": "https://gitlab.com/20kdc/ccprestartapi",
-	"version": "0.4.2",
+	"version": "0.4.3",
 	"postload": "postload.js",
 	"prestart": "prestart.js",
 	"module": true
