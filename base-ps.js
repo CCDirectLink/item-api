@@ -142,3 +142,10 @@ sc.MenuModel.inject({
 		this.parent(a, b, c);
 	}
 });
+
+sc.TradeModel.inject({
+	setEquipID(b, a){
+		let c = window.itemAPI.customItemToId[b] || b
+		this.parent(c, a);
+	}
+})
