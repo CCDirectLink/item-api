@@ -53,7 +53,11 @@ sc.Inventory.inject({
 	getBuffString(b, a, d){
 		var c = window.itemAPI.customItemToId[b] || b;
 		return this.parent(c, a, d)
-	}
+	},
+	isScalable(b){
+		let id = window.itemAPI.customItemToId[b] || b;
+		return this.parent(id);
+	},
 });
 
 // Devs be violating abstraction barriers I swear to god.
@@ -147,6 +151,19 @@ sc.TradeModel.inject({
 	setEquipID(b, a){
 		let c = window.itemAPI.customItemToId[b] || b
 		this.parent(c, a);
+	}
+})
+
+sc.TradeToggleStats.inject({
+	// makes ascended gear's level icon in a trade show the ascended colors
+	_setParameters(b){
+		this.parent(b);
+		// i don't know why the base game implementation doesn't work...
+		// but just forcing it to check again seems to fix it, at least.
+		if(this.level > 0 && sc.inventory.isScalable(b)) {
+			this.isScalable = true
+			this.compareItem.setDrawCallback(function(a, b) {sc.MenuHelper.drawLevel(this.level, a, b, this.ninepatch.gfx, this.isScalable)}.bind(this));
+		}
 	}
 })
 
