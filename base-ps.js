@@ -149,3 +149,27 @@ sc.TradeModel.inject({
 		this.parent(c, a);
 	}
 })
+
+sc.NewGamePlusModel.inject({
+	applyData(oldSave){
+		this.parent(oldSave);
+
+		let itemList = oldSave.vars.storage.ITEMAPI_OW_THE_EDGE_playerModelItems;
+		
+		for(let item in itemList) {
+			if(sc.inventory.getItem(item) && this._checkItemCondition(sc.inventory.getItem(item).type)){
+				sc.model.player.items[itemAPI.customItemToId[item]] = itemList[item]
+			}
+		}
+		
+		let equippedItems = oldSave.vars.storage.ITEMAPI_OW_THE_EDGE_playerModelEquip;
+		if(this.options["keep-equipment"] && equippedItems) {
+			let id;
+			if(equippedItems["feet"] && (id = itemAPI.customItemToId[equippedItems["feet"]])) sc.model.player.items[id]++
+			if(equippedItems["head"] && (id = itemAPI.customItemToId[equippedItems["head"]])) sc.model.player.items[id]++
+			if(equippedItems["leftArm"] && (id = itemAPI.customItemToId[equippedItems["leftArm"]])) sc.model.player.items[id]++
+			if(equippedItems["rightArm"] && (id = itemAPI.customItemToId[equippedItems["rightArm"]])) sc.model.player.items[id]++
+			if(equippedItems["torso"] && (id = itemAPI.customItemToId[equippedItems["torso"]])) sc.model.player.items[id]++
+		}
+	}
+})
