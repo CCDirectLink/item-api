@@ -130,6 +130,12 @@ sc.PlayerModel.inject({
 		}
 		return false;
 	},
+	onVarAccess(a, b) {
+		// it's really just item.{id}.amount that's broken as the rest work fine naturally
+		// it's just simpler to do an "all-or-nothing" fix.
+		if(b[0] == "item") b[1] = window.itemAPI.customItemToId[b[1]] || b[1];
+		return this.parent(a, b)
+	}
 });
 
 sc.StatsModel.inject({
