@@ -1,0 +1,15 @@
+{
+    "id": "item-api",
+    "version": "0.4.3",
+    
+    "title": "Item API",
+    "description": "Allows custom items to be prepared in such a way that they 'just work'.",
+    "homepage": "https://github.com/CCDirectLink/item-api",
+
+    "icons": {
+        "24": "icon-24.png"
+    },
+
+    "postload": "postload.js",
+	"prestart": "prestart.js"
+}
