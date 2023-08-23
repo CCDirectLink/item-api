@@ -6,7 +6,7 @@
  * You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
  */
 
-if (versions.hasOwnProperty('templating-api')) {
+if (window.versions && versions.hasOwnProperty('templating-api')) {
 	console.error('item-api now includes the code of templating-api to make the installation easier. Please, uninstall templating-api.');
 } else {
 
