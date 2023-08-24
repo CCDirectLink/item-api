@@ -2,7 +2,7 @@
 	"name": "item-api",
 	"description": "Allows custom items to be prepared in such a way that they 'just work'.",
 	"homepage": "https://github.com/CCDirectLink/item-api",
-	"version": "0.4.3",
+	"version": "0.4.4",
 	"postload": "postload.js",
 	"prestart": "prestart.js",
 	"module": true
