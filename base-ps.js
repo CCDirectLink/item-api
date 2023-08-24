@@ -18,43 +18,46 @@ sc.Inventory.inject({
 		c && (b = c);
 		return b < 0 ? null : this.items[b];
 	},
-	isBuffID: function(b) {
+	isBuffID: function (b) {
 		return this.getItem(b).isBuff
 	},
-	isEquipID: function(b) {
+	isEquipID: function (b) {
 		return this.getItem(b).type == sc.ITEMS_TYPES.EQUIP
 	},
-	getItemNameWithIcon: function(b) {
+	getItemNameWithIcon: function (b) {
 		b = this.getItem(b);
 		return !b ? "" : "\\i[" + (b.icon + this.getRaritySuffix(b.rarity || 0) || "item-default") + "]" + ig.LangLabel.getText(b.name)
 	},
-	getItemIcon: function(b) {
+	getItemLevel: function (b) {
+		return b < 0 ? 0 : this.getItem(b).level || 0
+	},
+	getItemIcon: function (b) {
 		b = this.getItem(b);
 		if (!b)
 			return null;
 		return !b ? "item-default" : "\\i[" + (b.icon + this.getRaritySuffix(b.rarity || 0) || "item-default") + "]"
 	},
-	getItemDescription: function(b) {
+	getItemDescription: function (b) {
 		b = this.getItem(b);
 		return b ? ig.LangLabel.getText(b.description) : ""
 	},
-	getItemRarity: function(b) {
+	getItemRarity: function (b) {
 		b = this.getItem(b);
 		return !b ? null : b.rarity
 	},
-	getItemSubType: function(b) {
+	getItemSubType: function (b) {
 		b = this.getItem(b);
 		return !b ? null : b.equipType
 	},
-	isConsumable: function(b) {
+	isConsumable: function (b) {
 		b = this.getItem(b);
 		return !b ? false : b.type == sc.ITEMS_TYPES.CONS
 	},
-	getBuffString(b, a, d){
+	getBuffString(b, a, d) {
 		var c = window.itemAPI.customItemToId[b] || b;
 		return this.parent(c, a, d)
 	},
-	isScalable(b){
+	isScalable(b) {
 		let id = window.itemAPI.customItemToId[b] || b;
 		return this.parent(id);
 	},
@@ -62,7 +65,7 @@ sc.Inventory.inject({
 
 // Devs be violating abstraction barriers I swear to god.
 sc.ItemContent.inject({
-	init: function(b, a) {
+	init: function (b, a) {
 		var c = window.itemAPI.customItemToId[b];
 		c && (b = c);
 		this.parent(b, a);
@@ -78,20 +81,20 @@ var b = {
 };
 
 sc.PlayerModel.inject({
-	getItemAmount: function(a) {
+	getItemAmount: function (a) {
 		var b = window.itemAPI.customItemToId[a];
 		b && (a = b);
 		if (!(a < 0)) return this.items[a] || 0
 	},
-	getItemAmountWithEquip: function(a) {
+	getItemAmountWithEquip: function (a) {
 		var b = window.itemAPI.customItemToId[a];
 		b && (a = b);
 		if (!(a < 0)) {
 			var b = this.items[a] || 0,
-			c = sc.inventory.getItem(a);
+				c = sc.inventory.getItem(a);
 			if (c.type == sc.ITEMS_TYPES.EQUIP) {
 				var d = -1,
-				e = -1;
+					e = -1;
 				switch (c.equipType) {
 					case sc.ITEMS_EQUIP_TYPES.HEAD:
 						d = this.equip.head;
@@ -112,17 +115,16 @@ sc.PlayerModel.inject({
 			return b
 		}
 	},
-	addItem: function(a, c, d, e) {
+	addItem: function (a, c, d, e) {
 		var f = window.itemAPI.customItemToId[a];
 		f && (a = f);
 		this.parent(a, c, d, e);
 	},
-	removeItem: function(a, c, d, e) {
+	removeItem: function (a, c, d, e) {
 		var f = window.itemAPI.customItemToId[a];
 		f && (a = f);
 		this.parent(a, c, d, e);
 	},
-
 	hasAnySetItem(set) {
 		for (const item of set.items) {
 			if (this.hasItem(item))
@@ -130,23 +132,32 @@ sc.PlayerModel.inject({
 		}
 		return false;
 	},
-	onVarAccess(a, b) {
-		// it's really just item.{id}.amount that's broken as the rest work fine naturally
-		// it's just simpler to do an "all-or-nothing" fix.
-		if(b[0] == "item") b[1] = window.itemAPI.customItemToId[b[1]] || b[1];
-		return this.parent(a, b)
+});
+
+sc.EnemyDrops.inject({
+	setDrops: function (b, d, f) {
+		if (b) {
+			for (var j = 0; j < 4; j++)
+				if (b[j]) {
+					if (!b[j].boosted || f) {
+						var newId = window.itemAPI.customItemToId[b[j].item];
+						newId && (b[j].item = newId);
+					}
+				}
+		}
+		this.parent(b, d, f);
 	}
 });
 
 sc.StatsModel.inject({
-	getMap: function(b, a) {
-		if(b == "items") {a = window.itemAPI.customItemToId[a] || a}
+	getMap: function (b, a) {
+		if (b == "items") { a = window.itemAPI.customItemToId[a] || a }
 		return this.parent(b, a)
 	}
 });
 
 sc.MenuModel.inject({
-	setBuffText(a, b, e){
+	setBuffText(a, b, e) {
 		// needed for showing the buff info in the help menu
 		let c = window.itemAPI.customItemToId[e] || e;
 		this.parent(a, b, c);
@@ -154,45 +165,32 @@ sc.MenuModel.inject({
 });
 
 sc.TradeModel.inject({
-	setEquipID(b, a){
+	setEquipID(b, a) {
 		let c = window.itemAPI.customItemToId[b] || b
 		this.parent(c, a);
 	}
 })
 
-sc.TradeToggleStats.inject({
-	// makes ascended gear's level icon in a trade show the ascended colors
-	_setParameters(b){
-		this.parent(b);
-		// i don't know why the base game implementation doesn't work...
-		// but just forcing it to check again seems to fix it, at least.
-		if(this.level > 0 && sc.inventory.isScalable(b)) {
-			this.isScalable = true
-			this.compareItem.setDrawCallback(function(a, b) {sc.MenuHelper.drawLevel(this.level, a, b, this.ninepatch.gfx, this.isScalable)}.bind(this));
-		}
-	}
-})
-
 sc.NewGamePlusModel.inject({
-	applyData(oldSave){
+	applyData(oldSave) {
 		this.parent(oldSave);
 
 		let itemList = oldSave.vars.storage.ITEMAPI_OW_THE_EDGE_playerModelItems;
-		
-		for(let item in itemList) {
-			if(sc.inventory.getItem(item) && this._checkItemCondition(sc.inventory.getItem(item).type)){
+
+		for (let item in itemList) {
+			if (sc.inventory.getItem(item) && this._checkItemCondition(sc.inventory.getItem(item).type)) {
 				sc.model.player.items[itemAPI.customItemToId[item]] = itemList[item]
 			}
 		}
-		
+
 		let equippedItems = oldSave.vars.storage.ITEMAPI_OW_THE_EDGE_playerModelEquip;
-		if(this.options["keep-equipment"] && equippedItems) {
+		if (this.options["keep-equipment"] && equippedItems) {
 			let id;
-			if(equippedItems["feet"] && (id = itemAPI.customItemToId[equippedItems["feet"]])) sc.model.player.items[id]++
-			if(equippedItems["head"] && (id = itemAPI.customItemToId[equippedItems["head"]])) sc.model.player.items[id]++
-			if(equippedItems["leftArm"] && (id = itemAPI.customItemToId[equippedItems["leftArm"]])) sc.model.player.items[id]++
-			if(equippedItems["rightArm"] && (id = itemAPI.customItemToId[equippedItems["rightArm"]])) sc.model.player.items[id]++
-			if(equippedItems["torso"] && (id = itemAPI.customItemToId[equippedItems["torso"]])) sc.model.player.items[id]++
+			if (equippedItems["feet"] && (id = itemAPI.customItemToId[equippedItems["feet"]])) sc.model.player.items[id]++
+			if (equippedItems["head"] && (id = itemAPI.customItemToId[equippedItems["head"]])) sc.model.player.items[id]++
+			if (equippedItems["leftArm"] && (id = itemAPI.customItemToId[equippedItems["leftArm"]])) sc.model.player.items[id]++
+			if (equippedItems["rightArm"] && (id = itemAPI.customItemToId[equippedItems["rightArm"]])) sc.model.player.items[id]++
+			if (equippedItems["torso"] && (id = itemAPI.customItemToId[equippedItems["torso"]])) sc.model.player.items[id]++
 		}
 	}
 })
