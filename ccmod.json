@@ -4,7 +4,9 @@
     
     "title": "Item API",
     "description": "Allows custom items to be prepared in such a way that they 'just work'.",
-    "homepage": "https://github.com/CCDirectLink/item-api",
+    "repository": "https://github.com/CCDirectLink/item-api",
+    "tags": ["library"],
+    "authors": ["elluminance", "dmitmel", "hsifnus", "ac2pic"],
 
     "icons": {
         "24": "icon-24.png"
