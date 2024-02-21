@@ -132,6 +132,13 @@ sc.PlayerModel.inject({
 		}
 		return false;
 	},
+	onVarAccess(a, b) {
+		if(b[0] == "item") {
+			let newID = window.itemAPI.customItemToId[b[1]]
+			if(newID) b[1] = newID;
+		}
+		return this.parent(a, b);
+	}
 });
 
 sc.EnemyDrops.inject({
