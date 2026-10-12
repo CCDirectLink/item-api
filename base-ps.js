@@ -133,7 +133,9 @@ sc.PlayerModel.inject({
 		return false;
 	},
 	onVarAccess(a, b) {
-		if(b[0] == "item") {
+		// item.ID.amount is the only one broken.
+		// All other item.ID.xxx are fine with the conversion themselves.
+		if(b[0] == "item" && b[2] == "amount") {
 			let newID = window.itemAPI.customItemToId[b[1]]
 			if(newID) b[1] = newID;
 		}
