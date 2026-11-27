@@ -8,6 +8,7 @@
 
 import {} from './templating-api-ps.js';
 import {} from './base-ps.js';
+import {} from './vanilla-id-mapping.js';
 import {} from './storage-ps.js';
 import {} from './assist-ps.js';
 
