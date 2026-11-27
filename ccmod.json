@@ -1,6 +1,6 @@
 {
     "id": "item-api",
-    "version": "0.5.0",
+    "version": "0.4.7",
     
     "title": "Item API",
     "description": "Allows custom items to be prepared in such a way that they 'just work'.",
